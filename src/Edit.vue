@@ -13,6 +13,7 @@
 
 <script setup lang="js">
 import { ref } from 'vue';
+import { useKeywordStore } from '@/stores/keyword.js';
 
 const keyword = ref('');
 const filepath = ref('');
@@ -35,6 +36,10 @@ const register = () => {
 };
 
 const close = () => {
+    if(registered.length > 0) {
+        const store = useKeywordStore();
+        store.addRange(registered);
+    }
     emit('close');
 };
 </script>
