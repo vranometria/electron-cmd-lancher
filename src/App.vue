@@ -17,9 +17,9 @@ const keyword = ref('');
 const isEditMode = ref(false);
 
 const keyPressed = (event) => { if (event.key === 'F1') { isEditMode.value = true; } };
-const closeEdit = () => { 
+const closeEdit = async () => { 
     isEditMode.value = false; 
-    alert(store.count);    
+    await window.electronApi.log(store.count); 
 };
 </script>
 
