@@ -1,12 +1,20 @@
 <template>
-    <div class="main">
-        <input v-model="keyword" placeholder="keyword" />
+    <div v-if="isEditMode">
+        <Edit />
+    </div>
+    <div v-else class="main">
+        <input v-model="keyword" placeholder="keyword" @keydown="keyPressed" />
     </div>
 </template>
 
 <script setup lang="js">
 import { ref } from 'vue';
+import Edit from './Edit.vue';
+
 const keyword = ref('');
+const isEditMode = ref(false);
+
+const keyPressed = (event) => { if (event.key === 'F1') { isEditMode.value = true; } };
 </script>
 
 <style scoped lang="css">
