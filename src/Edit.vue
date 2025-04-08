@@ -18,6 +18,8 @@ const keyword = ref('');
 const filepath = ref('');
 const registered = [];
 
+const emit = defineEmits(['close']);
+
 const clear = () => {
     keyword.value = '';
     filepath.value = '';
@@ -33,7 +35,7 @@ const register = () => {
 };
 
 const close = () => {
-
+    emit('close');
 };
 </script>
 
