@@ -2,6 +2,9 @@ import { app, BrowserWindow, ipcMain, webUtils } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import open from 'open';
+import fs from 'fs';
+
+const DATA_FILE = 'data.json';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -63,4 +66,13 @@ ipcMain.handle('log', async (e, s) => {
 
 ipcMain.handle('execute', async (e, filepath) => {
   open(filepath);
+});
+
+ipcMain.handle('save-file', async (e, data) => {
+  const s = JSON.stringify(data, null, 2);
+  try {
+    fs.writeFileSync(DATA_FILE, s);
+  } catch (err) {
+    console.error('書き込み失敗', err);
+  }
 });

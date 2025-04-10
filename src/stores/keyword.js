@@ -6,6 +6,9 @@ export const useKeywordStore = defineStore('keyword', {
     count: (state) => {
       return Object.keys(state.keywords).length;
     },
+    all: (state) => {
+      return Object.values(state.keywords);
+    },
   },
   actions: {
     add(shortcut){

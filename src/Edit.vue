@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="js">
-import { ref } from 'vue';
+import { ref, toRaw } from 'vue';
 import { useKeywordStore } from '@/stores/keyword.js';
 
 const keyword = ref('');
@@ -39,6 +39,9 @@ const close = () => {
     if (registered.length > 0) {
         const store = useKeywordStore();
         store.addRange(registered);
+        const shortcuts = store.all.map(x => toRaw(x));
+        console.log(shortcuts);
+        window.electronApi.save(shortcuts);
     }
     emit('close');
 };
