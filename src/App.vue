@@ -19,7 +19,8 @@ const isEditMode = ref(false);
 const keyPressed = (event) => { if (event.key === 'F1') { isEditMode.value = true; } };
 const closeEdit = async () => { 
     isEditMode.value = false; 
-    await window.electronApi.log(store.count); 
+    const filepath = "C:\\temp\\a.txt";
+    await window.electronApi.execute(filepath);
 };
 </script>
 

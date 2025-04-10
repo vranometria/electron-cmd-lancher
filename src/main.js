@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
+import open from 'open';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -58,4 +59,8 @@ app.on('window-all-closed', () => {
 
 ipcMain.handle('log', async (e, s) => {
   console.log(s);
+});
+
+ipcMain.handle('execute', async (e, filepath) => {
+  open(filepath);
 });
