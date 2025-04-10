@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="js">
-import { ref } from 'vue';
+import { ref, onMounted  } from 'vue';
 import { useKeywordStore } from '@/stores/keyword.js';
 import Edit from './Edit.vue';
 
@@ -32,6 +32,11 @@ const keyPressed = (event) => {
 const closeEdit = async () => { 
     isEditMode.value = false; 
 };
+
+onMounted(async () => {
+    const shortcuts = await window.electronApi.loadShortcut();
+    store.addRange(shortcuts);
+});
 </script>
 
 <style scoped lang="css">

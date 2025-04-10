@@ -7,4 +7,5 @@ contextBridge.exposeInMainWorld('electronApi', {
         return webUtils.getPathForFile(f);
     },
     save: (data) => ipcRenderer.invoke('save-file', {data}),
+    loadShortcut: () => ipcRenderer.invoke('load-shortcut'),
 });

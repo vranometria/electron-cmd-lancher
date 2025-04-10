@@ -30,7 +30,7 @@ const createWindow = () => {
   }
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -74,5 +74,16 @@ ipcMain.handle('save-file', async (e, data) => {
     fs.writeFileSync(DATA_FILE, s);
   } catch (err) {
     console.error('書き込み失敗', err);
+  }
+});
+
+ipcMain.handle('load-shortcut', async (e) => {
+  if (!fs.existsSync(DATA_FILE)) { return []; }
+  try {
+    const s = fs.readFileSync(DATA_FILE, 'utf8');
+    const obj = JSON.parse(s);
+    return obj.data;
+  } catch (err) {
+    console.error('同期読み込み失敗', err);
   }
 });
