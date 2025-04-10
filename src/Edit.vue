@@ -3,7 +3,7 @@
         <input v-model="keyword" placeholder="keyword" />
     </div>
     <div>
-        <input v-model="filepath" placeholder="filepath" />
+        <input v-model="filepath" placeholder="filepath" @dragover.prevent @drop.prevent="fileDroped" />
     </div>
     <div class="btn-area">
         <button @click="register">Add</button>
@@ -36,12 +36,17 @@ const register = () => {
 };
 
 const close = () => {
-    if(registered.length > 0) {
+    if (registered.length > 0) {
         const store = useKeywordStore();
         store.addRange(registered);
     }
     emit('close');
 };
+
+const fileDroped = async (e) => {
+    const file = e.dataTransfer.files[0];
+    filepath.value = await window.electronApi.fullpath(file);
+}
 </script>
 
 <style scoped lang="css">
