@@ -16,11 +16,21 @@ const store = useKeywordStore();
 const keyword = ref('');
 const isEditMode = ref(false);
 
-const keyPressed = (event) => { if (event.key === 'F1') { isEditMode.value = true; } };
+const keyPressed = (event) => { 
+    switch(event.key){
+        case 'F1':
+            isEditMode.value = true;
+            return;
+        
+        case 'Enter':
+            const s = store.get(keyword.value);
+            window.electronApi.execute(s.filepath);
+            keyword.value = '';
+            return;
+    }
+};
 const closeEdit = async () => { 
     isEditMode.value = false; 
-    const filepath = "C:\\temp\\a.txt";
-    await window.electronApi.execute(filepath);
 };
 </script>
 
