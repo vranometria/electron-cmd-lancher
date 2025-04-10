@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, webUtils } from 'electron';
+import { app, BrowserWindow, ipcMain, globalShortcut  } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import open from 'open';
@@ -11,9 +11,11 @@ if (started) {
   app.quit();
 }
 
+let mainWindow;
+
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 300,
     height: 200,
     autoHideMenuBar: true,
@@ -46,6 +48,15 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
+
+  globalShortcut.register('CommandOrControl+Shift+Y', () => {
+    if (mainWindow) {
+      // 最小化されてたら戻す
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.show();
+      mainWindow.focus();
+    }
+  });
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -55,6 +66,10 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+});
+
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll();
 });
 
 // In this file you can include the rest of your app's specific main process
