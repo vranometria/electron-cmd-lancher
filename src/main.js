@@ -53,6 +53,7 @@ app.whenReady().then(() => {
     if (mainWindow) {
       // 最小化されてたら戻す
       if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.hide();
       mainWindow.show();
       mainWindow.focus();
     }
@@ -81,6 +82,7 @@ ipcMain.handle('log', async (e, s) => {
 
 ipcMain.handle('execute', async (e, filepath) => {
   open(filepath);
+  mainWindow.hide();
 });
 
 ipcMain.handle('save-file', async (e, data) => {
