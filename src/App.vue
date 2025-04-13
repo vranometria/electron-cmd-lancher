@@ -1,6 +1,9 @@
 <template>
-    <div v-if="isEditMode">
-        <Edit @close="closeEdit"/>
+    <div v-if="mode === 'edit'">
+        <Edit @close="close"/>
+    </div>
+    <div v-else-if="mode === 'hotkey'">
+        <Hotkey @close="close" />
     </div>
     <div v-else class="main">
         <input v-model="keyword" placeholder="keyword" @keydown="keyPressed" />
@@ -11,15 +14,20 @@
 import { ref, onMounted  } from 'vue';
 import { useKeywordStore } from '@/stores/keyword.js';
 import Edit from './Edit.vue';
+import Hotkey from './Hotkey.vue';
 
 const store = useKeywordStore();
 const keyword = ref('');
-const isEditMode = ref(false);
+const mode = ref("");
 
 const keyPressed = (event) => { 
     switch(event.key){
         case 'F1':
-            isEditMode.value = true;
+            mode.value = "edit";
+            return;
+
+        case 'F2':
+            mode.value = "hotkey";
             return;
         
         case 'Enter':
@@ -29,8 +37,8 @@ const keyPressed = (event) => {
             return;
     }
 };
-const closeEdit = async () => { 
-    isEditMode.value = false; 
+const close = async () => { 
+    mode.value = '';
 };
 
 onMounted(async () => {

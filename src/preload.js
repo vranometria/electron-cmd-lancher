@@ -8,4 +8,5 @@ contextBridge.exposeInMainWorld('electronApi', {
     },
     save: (data) => ipcRenderer.invoke('save-file', {data}),
     loadShortcut: () => ipcRenderer.invoke('load-shortcut'),
+    registerHotkey: (hotkey) => ipcRenderer.invoke('register-hotkey', hotkey),
 });
