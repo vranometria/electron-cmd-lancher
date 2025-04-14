@@ -4,13 +4,13 @@ import started from "electron-squirrel-startup";
 import open from "open";
 import fs from "fs";
 
-import { saveFile } from "./utils";
+import { saveFile, readFile, registerHotkey } from "./utils";
 
 const DEVELOP = false;
 const windowConfig = DEVELOP ? { width: 800, height: 600 } : { width: 300, height: 200 };
 
-const DATA_FILE = "data.json";
-const HOTKEY_DATA_FILE = "hotkey.json";
+const DATA_FILE = ".\\data\\data.json";
+const HOTKEY_DATA_FILE = ".\\data\\hotkey.json";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -94,31 +94,30 @@ ipcMain.handle("load-shortcut", async (e) => {
   if (!fs.existsSync(DATA_FILE)) {
     return [];
   }
-  try {
-    const s = fs.readFileSync(DATA_FILE, "utf8");
-    const obj = JSON.parse(s);
-    return obj.data;
-  } catch (err) {
-    console.error("同期読み込み失敗", err);
-  }
+  const obj = readFile(DATA_FILE);
+  return obj.data;
 });
 
 ipcMain.handle("register-hotkey", async (e, hotkey) => {
-  const ctrl = hotkey.ctrl ? "Control" : "";
-  const alt = hotkey.alt ? "Alt" : "";
-  const shift = hotkey.shift ? "Shift" : "";
-  const key = hotkey.key.toUpperCase();
-  const s = [ctrl, alt, shift, key].filter((v) => v).join("+");
-
-  if (globalShortcut.isRegistered(s)) {
+  if(!registerHotkey(hotkey)){
     return false;
   }
 
-  globalShortcut.register(s, () => {
-    mainWindow.show();
-    mainWindow.focus();
-  });
-
   saveFile(HOTKEY_DATA_FILE, hotkey)
   return true;
+});
+
+ipcMain.handle("load-hotkey", async (e) => {
+  console.info("hotkey init.");
+  if (!fs.existsSync(HOTKEY_DATA_FILE)) {
+    console.info("hotkey data not found");
+    return null;
+  }
+  const hotkey = readFile(HOTKEY_DATA_FILE);
+  if(!registerHotkey(hotkey, mainWindow)){
+    console.error("hotkey registration error!");
+  }
+  console.info("hotkey registered");
+  console.log(hotkey);
+  return hotkey;
 });

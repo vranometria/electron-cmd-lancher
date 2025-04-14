@@ -44,6 +44,9 @@ const close = async () => {
 onMounted(async () => {
     const shortcuts = await window.electronApi.loadShortcut();
     store.addRange(shortcuts);
+
+    const hotkey = await window.electronApi.loadHotkey();
+    console.log(hotkey);
 });
 </script>
 
