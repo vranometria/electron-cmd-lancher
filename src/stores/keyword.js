@@ -9,6 +9,9 @@ export const useKeywordStore = defineStore('keyword', {
     all: (state) => {
       return Object.values(state.keywords);
     },
+    allKeys: (state) => {
+      return Object.keys(state.keywords);
+    }
   },
   actions: {
     add(shortcut){
