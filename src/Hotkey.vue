@@ -26,14 +26,26 @@
 
 
 <script lang="js" setup>
-import { ref } from 'vue';
-const emit = defineEmits(['close']);
+import { ref, watch } from 'vue';
+import { useHotkeyStore } from '@/stores/hotkey.js';
 
-const key = ref('');
-const alt = ref(false);
-const ctrl = ref(false);
-const shift = ref(false);
+const emit = defineEmits(['close']);
+const store = useHotkeyStore();
+const data = store.get();
+
+const key = ref(data.key);
+const alt = ref(data.alt);
+const ctrl = ref(data.ctrl);
+const shift = ref(data.shift);
 const msg = ref("");
+
+watch(data, (newValue, oldValue) => {
+    key.value = data.key;
+    alt.value = data.alt;
+    ctrl.value = data.ctrl;
+    shift.value = data.shift;
+}, { deep: true });
+
 
 const keyPressed = (event) => {
     event.preventDefault();
@@ -41,13 +53,14 @@ const keyPressed = (event) => {
 };
 
 const register = async () => {
-    const data = {
+    const d = {
         key: key.value,
         alt: alt.value,
         ctrl: ctrl.value,
         shift: shift.value
     };
-    const res = await window.electronApi.registerHotkey(data);
+    const res = await window.electronApi.registerHotkey(d);
+    store.put(d);
     msg.value = res ? "Hotkey registered successfully!" : "Failed to register hotkey!";
 };
 

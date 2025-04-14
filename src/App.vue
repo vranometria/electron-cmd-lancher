@@ -13,10 +13,12 @@
 <script setup lang="js">
 import { ref, onMounted  } from 'vue';
 import { useKeywordStore } from '@/stores/keyword.js';
+import { useHotkeyStore } from '@/stores/hotkey.js';
 import Edit from './Edit.vue';
 import Hotkey from './Hotkey.vue';
 
-const store = useKeywordStore();
+const keywordStore = useKeywordStore();
+const hotkeyStore = useHotkeyStore();
 const keyword = ref('');
 const mode = ref("");
 
@@ -43,10 +45,10 @@ const close = async () => {
 
 onMounted(async () => {
     const shortcuts = await window.electronApi.loadShortcut();
-    store.addRange(shortcuts);
+    keywordStore.addRange(shortcuts);
 
     const hotkey = await window.electronApi.loadHotkey();
-    console.log(hotkey);
+    hotkeyStore.put(hotkey);
 });
 </script>
 

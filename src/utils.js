@@ -31,6 +31,8 @@ export const readFile = (filepath) => {
 }
 
 export const registerHotkey = (hotkey, mainWindow) => {
+  globalShortcut.unregisterAll();
+
   const ctrl = hotkey.ctrl ? "Control" : "";
   const alt = hotkey.alt ? "Alt" : "";
   const shift = hotkey.shift ? "Shift" : "";

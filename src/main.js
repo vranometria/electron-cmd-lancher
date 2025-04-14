@@ -111,13 +111,12 @@ ipcMain.handle("load-hotkey", async (e) => {
   console.info("hotkey init.");
   if (!fs.existsSync(HOTKEY_DATA_FILE)) {
     console.info("hotkey data not found");
-    return null;
+    return {key: "", ctrl: false, alt: false, shift: false};
   }
   const hotkey = readFile(HOTKEY_DATA_FILE);
   if(!registerHotkey(hotkey, mainWindow)){
     console.error("hotkey registration error!");
   }
-  console.info("hotkey registered");
-  console.log(hotkey);
+  console.info("hotkey registered", hotkey);
   return hotkey;
 });
