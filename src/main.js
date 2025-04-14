@@ -4,15 +4,18 @@ import started from "electron-squirrel-startup";
 import open from "open";
 import fs from "fs";
 
+import { saveFile } from "./utils";
+
+const DEVELOP = false;
+const windowConfig = DEVELOP ? { width: 800, height: 600 } : { width: 300, height: 200 };
+
 const DATA_FILE = "data.json";
+const HOTKEY_DATA_FILE = "hotkey.json";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit();
 }
-
-const DEVELOP = false;
-const windowConfig = DEVELOP ? { width: 800, height: 600 } : { width: 300, height: 200 };
 
 let mainWindow;
 
@@ -82,11 +85,8 @@ ipcMain.handle("execute", async (e, filepath) => {
 });
 
 ipcMain.handle("save-file", async (e, data) => {
-  const s = JSON.stringify(data, null, 2);
-  try {
-    fs.writeFileSync(DATA_FILE, s);
-  } catch (err) {
-    console.error("書き込み失敗", err);
+  if(!saveFile(DATA_FILE, data)){
+    console.error("file writing fail!");
   }
 });
 
@@ -118,5 +118,7 @@ ipcMain.handle("register-hotkey", async (e, hotkey) => {
     mainWindow.show();
     mainWindow.focus();
   });
+
+  saveFile(HOTKEY_DATA_FILE, hotkey)
   return true;
 });
