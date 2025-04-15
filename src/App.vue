@@ -6,7 +6,8 @@
         <Hotkey @close="close" />
     </div>
     <div v-else class="main">
-        <AutoComplete v-model="keyword" :suggestions="suggestions" placeholder="keyword" @keydown="keyPressed"
+        <!-- placeholder="keyword" -->
+        <AutoComplete v-model="keyword" :suggestions="suggestions"  @keydown ="keyPressed" @item-select="onSelect"
             class="key-in" @complete="search" />
     </div>
 </template>
@@ -47,16 +48,25 @@ const keyPressed = (event) => {
             return;
     }
 };
+
 const close = async () => {
     mode.value = '';
     suggestions.value = keywordStore.allKeys;
-    electronApi.log(keywordStore.allKeys);
 };
 
 const search = (event) => {
     const query = event.query.toLowerCase()
     suggestions.value = keywordStore.allKeys.filter(item => item.toLowerCase().includes(query));
 }
+
+const onSelect = (event) => {
+    const selected = event.value;
+    const s = keywordStore.get(selected);
+    if (s) {
+        window.electronApi.execute(s.filepath);
+        keyword.value = '';
+    }
+};
 
 onMounted(async () => {
     const shortcuts = await window.electronApi.loadShortcut();
