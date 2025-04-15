@@ -35,8 +35,13 @@ const keyPressed = (event) => {
             mode.value = "hotkey";
             return;
 
+        case 'Escape':
+            if(hotkeyStore.isRegistered) {
+                window.electronApi.hide();
+            }
+
         case 'Enter':
-            const s = store.get(keyword.value);
+            const s = keywordStore.get(keyword.value);
             window.electronApi.execute(s.filepath);
             keyword.value = '';
             return;

@@ -10,4 +10,5 @@ contextBridge.exposeInMainWorld('electronApi', {
     loadShortcut: () => ipcRenderer.invoke('load-shortcut'),
     registerHotkey: (hotkey) => ipcRenderer.invoke('register-hotkey', hotkey),
     loadHotkey: () => ipcRenderer.invoke('load-hotkey'),
+    hide: () => ipcRenderer.invoke('hide'),
 });

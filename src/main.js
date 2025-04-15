@@ -99,7 +99,7 @@ ipcMain.handle("load-shortcut", async (e) => {
 });
 
 ipcMain.handle("register-hotkey", async (e, hotkey) => {
-  if(!registerHotkey(hotkey)){
+  if(!registerHotkey(hotkey, mainWindow)){
     return false;
   }
 
@@ -119,4 +119,8 @@ ipcMain.handle("load-hotkey", async (e) => {
   }
   console.info("hotkey registered", hotkey);
   return hotkey;
+});
+
+ipcMain.handle("hide", async (e) => {
+  mainWindow.hide();
 });
